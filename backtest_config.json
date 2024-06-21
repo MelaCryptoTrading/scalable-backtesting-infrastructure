@@ -1,0 +1,23 @@
+{
+    "date_range": {
+      "start_date": "2022-01-01",
+      "end_date": "2023-01-01"
+    },
+    "indicators": [
+      {
+        "type": "SMA",
+        "params": {
+          "window": 20
+        }
+      },
+      {
+        "type": "MACD",
+        "params": {
+          "short_window": 12,
+          "long_window": 26,
+          "signal_window": 9
+        }
+      }
+    ]
+  }
+  
