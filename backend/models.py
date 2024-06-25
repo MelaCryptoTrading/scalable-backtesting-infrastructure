@@ -1,4 +1,3 @@
-# models.py
 from werkzeug.security import generate_password_hash, check_password_hash
 from extensions import db
 
@@ -12,3 +11,4 @@ class Userss(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
