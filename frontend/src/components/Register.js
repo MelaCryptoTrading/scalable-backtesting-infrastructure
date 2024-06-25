@@ -4,14 +4,20 @@ import axios from 'axios';
 function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setMessage('');
         try {
-            const response = await axios.post('/register', { username, password });
-            alert(response.data.message);
+            const response = await axios.post('http://localhost:5000/register', { username, password });
+            setMessage(response.data.message);
         } catch (error) {
-            console.error(error);
+            setMessage(error.response?.data?.error || 'An error occurred');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -42,10 +48,19 @@ function Register() {
                             required
                         />
                     </div>
-                    <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
-                        Register
+                    <button 
+                        type="submit" 
+                        className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+                        disabled={loading}
+                    >
+                        {loading ? 'Registering...' : 'Register'}
                     </button>
                 </form>
+                {message && (
+                    <div className={`mt-4 p-2 text-center rounded-lg ${message.startsWith('User registered') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                        {message}
+                    </div>
+                )}
             </div>
         </div>
     );
