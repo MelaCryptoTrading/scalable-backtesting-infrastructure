@@ -1,32 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 
 function Dashboard() {
-    const [scenes, setScenes] = useState([]);
     const [dateRange, setDateRange] = useState({ start: '', end: '' });
     const [indicator, setIndicator] = useState('');
     const [params, setParams] = useState('');
+    const [scenes, setScenes] = useState([
+        // Mock data for display purposes
+        { id: 1, date_range: { start: '2024-01-01', end: '2024-01-10' }, indicator: 'Example Indicator', params: { key: 'value' } }
+    ]);
 
-    useEffect(() => {
-        const fetchScenes = async () => {
-            const token = localStorage.getItem('token');
-            const response = await axios.get('http://127.0.0.1:5000/scenes', { headers: { Authorization: `Bearer ${token}` } });
-            setScenes(response.data);
-        };
-
-        fetchScenes();
-    }, []);
-
-    const handleCreateScene = async (e) => {
+    const handleCreateScene = (e) => {
         e.preventDefault();
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.post('/scenes', { date_range: dateRange, indicator, params: JSON.parse(params) }, { headers: { Authorization: `Bearer ${token}` } });
-            alert(response.data.message);
-            setScenes([...scenes, response.data.scene]);
-        } catch (error) {
-            console.error(error);
-        }
+        // Mock new scene creation
+        const newScene = {
+            id: scenes.length + 1,
+            date_range: { start: dateRange.start, end: dateRange.end },
+            indicator,
+            params: JSON.parse(params)
+        };
+        setScenes([...scenes, newScene]);
+        alert('Scene created successfully');
     };
 
     return (

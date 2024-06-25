@@ -8,11 +8,12 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/login', { username, password });
+            const response = await axios.post('http://localhost:5000/login', { username, password });
             localStorage.setItem('token', response.data.access_token);
             window.location.href = '/dashboard';
         } catch (error) {
             console.error(error);
+            alert('Invalid username or password');
         }
     };
 
