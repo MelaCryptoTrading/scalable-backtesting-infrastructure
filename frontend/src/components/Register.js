@@ -22,9 +22,11 @@ function Register() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <div className="max-w-md w-full bg-white shadow-md rounded-lg p-8">
-                <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
+        <div className="min-h-screen flex items-center justify-center" style={{
+            background: "linear-gradient(90deg, rgba(131, 126, 226, 1) 24%, rgba(114, 114, 226, 1) 58%, rgba(0, 212, 255, 1) 100%)"
+          }}>
+            <div className="max-w-md w-full bg-gray-100 shadow-md rounded-lg p-8">
+                <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label className="block text-gray-700">Username</label>
@@ -53,7 +55,7 @@ function Register() {
                         className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
                         disabled={loading}
                     >
-                        {loading ? 'Registering...' : 'Register'}
+                        {loading ? 'Registering...' : 'Sign Up'}
                     </button>
                 </form>
                 {message && (

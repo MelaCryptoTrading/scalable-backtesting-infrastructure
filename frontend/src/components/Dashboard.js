@@ -30,7 +30,9 @@ function Dashboard() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="min-h-screen flex items-center justify-center bg-gray-100"style={{
+            background: "linear-gradient(90deg, rgba(131, 126, 226, 1) 24%, rgba(114, 114, 226, 1) 58%, rgba(0, 212, 255, 1) 100%)"
+          }}>
             <div className="max-w-4xl w-full bg-white shadow-md rounded-lg p-8">
                 <h2 className="text-2xl font-bold mb-6 text-center">Dashboard</h2>
                 <form onSubmit={handleCreateScene} className="mb-6">
