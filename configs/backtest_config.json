@@ -1,0 +1,31 @@
+{
+    "backtests": [
+      {
+        "name": "RSI Strategy",
+        "indicator": "RSI",
+        "params": {
+          "rsi_period": [14, 21],
+          "rsi_upper": [70, 75],
+          "rsi_lower": [30, 35]
+        },
+        "date_range": {
+          "start_date": "2023-01-01",
+          "end_date": "2023-12-31"
+        }
+      },
+      {
+        "name": "MACD Strategy",
+        "indicator": "MACD",
+        "params": {
+          "macd1": [12, 15],
+          "macd2": [26, 30],
+          "signal": [9]
+        },
+        "date_range": {
+          "start_date": "2022-01-01",
+          "end_date": "2023-12-31"
+        }
+      }
+    ]
+  }
+  
