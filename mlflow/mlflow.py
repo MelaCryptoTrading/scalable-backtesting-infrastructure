@@ -1,38 +1,64 @@
 import mlflow
-from mlflow.models import infer_signature
 
-mlflow.set_tracking_uri(uri="http://<host>:<port>")
+def kafka_producer_with_mlflow():
+    bootstrap_servers = ["localhost:9092"]
+    producer_instance = KProducerClass(bootstrap_servers)
+    producer = producer_instance.create_producer()
+    
+    if producer:
+        message = {
+            "scene_id": "scene1",
+            "description": "Backtest scene with SMA indicator",
+            "parameters": {
+                "start_date": "2023-01-01",
+                "end_date": "2024-06-21",
+                "indicator": "SMA",
+                "window": 20
+            }
+        }
+        message_bytes = json.dumps(message).encode('utf-8')
+        topic_name = "scenes"
+        
+        # Track with MLflow
+        mlflow.start_run(run_name="Kafka Producer Run")
+        try:
+            metadata = producer_instance.publish_message(topic_name, message_bytes)
+            logging.info(f"Message metadata: {metadata}")
+            mlflow.log_param("topic", topic_name)
+            mlflow.log_param("bootstrap_servers", bootstrap_servers)
+            mlflow.log_metric("message_size", len(message_bytes))
+            mlflow.log_artifact("producer_metadata", metadata)
+        except Exception as e:
+            logging.error("Failed to publish message")
+            mlflow.log_param("status", "failed")
+        finally:
+            mlflow.end_run()
 
-import pandas as pd
-from sklearn import datasets
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+def kafka_consumer_with_mlflow(topic_name):
+    bootstrap_servers = ["localhost:9092"]
+    consumer_instance = KConsumerClass()
+    consumer = consumer_instance.create_consumer(topic_name, bootstrap_servers)
+    
+    mlflow.start_run(run_name="Kafka Consumer Run")
+    try:
+        for message in consumer_instance.read_from_consumer(consumer):
+            logging.info(f"Received message: {message.value}")
+            mlflow.log_param("topic", topic_name)
+            mlflow.log_param("bootstrap_servers", bootstrap_servers)
+            mlflow.log_metric("message_offset", message.offset)
+            # Process the message
+            # For demonstration, log the message content as an artifact
+            with open("consumed_message.json", "w") as f:
+                f.write(message.value.decode('utf-8'))
+            mlflow.log_artifact("consumed_message.json")
+    except Exception as e:
+        logging.error("Failed to consume message")
+        mlflow.log_param("status", "failed")
+    finally:
+        mlflow.end_run()
 
+if __name__ == "__main__":
+    kafka_producer_with_mlflow()
+    kafka_consumer_with_mlflow("scenes")
 
-# Load the dataset
-X, y = datasets.load_iris(return_X_y=True)
-
-# Split the data into training and test sets
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
-
-# Define the model hyperparameters
-params = {
-    "solver": "lbfgs",
-    "max_iter": 1000,
-    "multi_class": "auto",
-    "random_state": 8888,
-}
-
-# Train the model
-lr = LogisticRegression(**params)
-lr.fit(X_train, y_train)
-
-# Predict on the test set
-y_pred = lr.predict(X_test)
-
-# Calculate metrics
-accuracy = accuracy_score(y_test, y_pred)
 
