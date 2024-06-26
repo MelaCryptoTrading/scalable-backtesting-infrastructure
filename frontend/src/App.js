@@ -5,6 +5,7 @@ import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Homepage from './components/Homepage';
 import Navbar from './components/Navbar';
+import IndexFund from './components/IndexFund';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/index-fund" element={<IndexFund />} />
         </Routes>
       </div>
     </Router>

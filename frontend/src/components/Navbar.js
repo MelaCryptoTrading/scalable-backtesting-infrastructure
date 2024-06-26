@@ -25,6 +25,9 @@ function Navbar() {
           <Link to="/dashboard" className="text-white hover:bg-gray-700 px-3 py-2 rounded">
             Dashboard
           </Link>
+          <Link to="/index-fund" className="text-white hover:bg-gray-700 px-3 py-2 rounded">
+            Index Fund
+          </Link>
         </div>
       </div>
     </nav>
