@@ -16,7 +16,7 @@ GitHub Actions
 Clone the repository:
 sh
 Copy code
-git clone https://github.com/your-repo/mela-crypto-backtest.git
+git clone https://github.com/MelaCryptoTrading/scalable-backtesting-infrastructure.git
 Install Python dependencies:
 sh
 Copy code
