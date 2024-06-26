@@ -10,7 +10,7 @@ def kafka_producer_with_mlflow():
             "scene_id": "scene1",
             "description": "Backtest scene with SMA indicator",
             "parameters": {
-                "start_date": "2023-01-01",
+                "start_date": "2022-06-20",
                 "end_date": "2024-06-21",
                 "indicator": "SMA",
                 "window": 20

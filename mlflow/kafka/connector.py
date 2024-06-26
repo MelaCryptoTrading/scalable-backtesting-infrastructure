@@ -25,14 +25,6 @@ class KafkaConnect():
         return a list of topics from Kafka cluster
         """
         return client.list_topics()
-    
-    def find_group3_topics(self, topics_list):
-        """
-        return the topics that belong to group 3 only
-        """
-        for topic in topics_list:
-            if topic.startswith('g3'):
-                print(topic)
         
     
     def delete_topic(self,client, topic_name):
@@ -41,5 +33,3 @@ class KafkaConnect():
         TODO: test this!!!
         """
         client.delete_topics(topic_name)
-# if __name__ == '__main__':
-#     KafkaConnect()

@@ -1,41 +1,41 @@
-import mlflow
-import mlflow.sklearn
-from sklearn.linear_model import LinearRegression
-from sklearn.datasets import make_regression
-from sklearn.model_selection import train_test_split
-import numpy as np
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
 
-def run_backtest(params):
-    # Simulate generating a dataset
-    X, y = make_regression(n_samples=1000, n_features=params["n_features"], noise=params["noise"])
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+import datetime  
+import os.path  
+import sys  
+import os
 
-    # Create and train a model
-    model = LinearRegression()
-    model.fit(X_train, y_train)
-    
-    # Calculate performance metrics
-    score = model.score(X_test, y_test)
-    
-    return model, score
+# Import the backtrader platform
+import backtrader as bt
+import matplotlib.pyplot as plt
+import pandas as pd
+from random import random, randint
+import mlflow 
 
-def log_backtest(params, score):
-    # Log parameters and metrics to MLflow
-    with mlflow.start_run():
-        mlflow.log_params(params)
-        mlflow.log_metric("score", score)
-        # Log the model
-        mlflow.sklearn.log_model(model, "model")
-        print(f"Logged backtest run with params: {params} and score: {score}")
+sys.path.append(os.path.abspath(os.path.join("./backtrader-testing")))
+from  GoldenCross import GoldenCross
 
-# Define the list of parameter sets for multiple backtests
-backtest_params_list = [
-    {"n_features": 10, "noise": 0.1},
-    {"n_features": 20, "noise": 0.2},
-    {"n_features": 30, "noise": 0.3},
-]
+algo_prices = pd.read_csv('./data/ALGO-USD.csv', index_col='Date', parse_dates=True)
 
-# Run and log multiple backtest runs
-for params in backtest_params_list:
-    model, score = run_backtest(params)
-    log_backtest(params, score)
+cerebro = bt.Cerebro()
+cerebro.broker.setcash(1000000)
+feed = bt.feeds.PandasData(dataname= algo_prices)
+cerebro.adddata(feed)
+
+cerebro.addstrategy(GoldenCross)
+print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
+mlflow.log_metrics({"Initial Portfolio Value":cerebro.broker.getvalue()})
+cerebro.run()
+print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
+
+with mlflow.start_run(run_name="backtrader") as run:
+
+    mlflow.log_params({'Strategy':'GoldenCross'})
+
+    mlflow.log_metrics({"Final Portfolio Value":cerebro.broker.getvalue()})
+
+    # Log an artifact (output file)
+    if not os.path.exists("outputs"):
+        os.makedirs("outputs")
+    mlflow.log_artifacts("outputs")
