@@ -1,35 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function Dashboard() {
+    const [scenes, setScenes] = useState([]);
     const [dateRange, setDateRange] = useState({ start: '', end: '' });
     const [indicator, setIndicator] = useState('');
     const [params, setParams] = useState('');
-    const [scenes, setScenes] = useState([
-        // Mock data for display purposes
-        { id: 1, date_range: { start: '2024-01-01', end: '2024-01-10' }, indicator: 'Example Indicator', params: { key: 'value' } }
-    ]);
 
-    const handleCreateScene = (e) => {
-        e.preventDefault();
-        // Mock new scene creation
-        const newScene = {
-            id: scenes.length + 1,
-            date_range: { start: dateRange.start, end: dateRange.end },
-            indicator,
-            params: JSON.parse(params)
+    useEffect(() => {
+        const fetchScenes = async () => {
+            const token = localStorage.getItem('token');
+            try {
+                const response = await axios.get('http://localhost:5000/scenes', { headers: { Authorization: `Bearer ${token}` } });
+                setScenes(response.data);
+            } catch (error) {
+                console.error("Error fetching scenes:", error);
+            }
         };
-        setScenes([...scenes, newScene]);
-        alert('Scene created successfully');
+
+        fetchScenes();
+    }, []);
+
+    const handleBacktest = async (e) => {
+        e.preventDefault();
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.post('http://localhost:5000/backtest', 
+                { date_range: dateRange, indicator, params: JSON.parse(params) }, 
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            console.log(response.data); // Debug log
+            if (response.data.message) {
+                alert(response.data.message);
+            } else {
+                alert('Unexpected response structure');
+            }
+        } catch (error) {
+            console.error("Error executing backtest:", error);
+            alert(error.response ? error.response.data.error : 'An error occurred');
+        }
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="max-w-4xl w-full bg-white shadow-md rounded-lg p-8">
                 <h2 className="text-2xl font-bold mb-6 text-center">Dashboard</h2>
-                <form onSubmit={handleCreateScene} className="mb-6">
+                <form onSubmit={handleBacktest} className="mb-6">
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <input
-                            type="text"
+                            type="date"
                             value={dateRange.start}
                             onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
                             placeholder="Start Date"
@@ -37,7 +56,7 @@ function Dashboard() {
                             required
                         />
                         <input
-                            type="text"
+                            type="date"
                             value={dateRange.end}
                             onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
                             placeholder="End Date"
@@ -62,7 +81,7 @@ function Dashboard() {
                         required
                     />
                     <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 mt-4">
-                        Create Scene
+                        Run Backtest
                     </button>
                 </form>
                 <div>
