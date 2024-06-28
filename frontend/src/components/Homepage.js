@@ -7,9 +7,9 @@ function App() {
    <div className="w-screen h-screen text-white" style={{
      background: "linear-gradient(90deg, rgba(131, 126, 226, 1) 24%, rgba(114, 114, 226, 1) 58%, rgba(0, 212, 255, 1) 100%)"
    }}>
-     <div class="container mx-auto flex px-5 py-24 items-center justify-center">
-       <img class="lg:w-2/6 md:w-3/6 w-5/6 mb-10 object-cover object-center" alt="hero" src={hero} />
-       <div class="text-center lg:w-5/12 w-full">
+     <div className="container mx-auto flex px-5 py-24 items-center justify-center">
+       <img className="lg:w-2/6 md:w-3/6 w-5/6 mb-10 object-cover object-center" alt="hero" src={hero} />
+       <div className="text-center lg:w-5/12 w-full">
          <h1 className="my-4 text-5xl font-bold leading-tight">
            Welcome to Mela Crypto Trading
          </h1>
