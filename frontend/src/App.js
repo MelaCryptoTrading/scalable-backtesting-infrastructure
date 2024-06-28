@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard';
 import Homepage from './components/Homepage';
 import Navbar from './components/Navbar';
 import IndexFund from './components/IndexFund';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
